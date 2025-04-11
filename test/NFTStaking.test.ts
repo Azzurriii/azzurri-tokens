@@ -1,9 +1,9 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import type { Staking, NFT } from "../typechain-types";
+import type { NFTStaking, NFT } from "../typechain-types";
 
-describe("Staking", function () {
-  let staking: Staking;
+describe("NFTStaking", function () {
+  let staking: NFTStaking;
   let nft: NFT;
   let owner: any;
   let user: any;
@@ -21,9 +21,9 @@ describe("Staking", function () {
     );
     await nft.waitForDeployment();
 
-    // Deploy Staking
-    const Staking = await ethers.getContractFactory("Staking");
-    staking = await Staking.deploy(await nft.getAddress());
+    // Deploy NFTStaking
+    const NFTStaking = await ethers.getContractFactory("NFTStaking");
+    staking = await NFTStaking.deploy(await nft.getAddress());
     await staking.waitForDeployment();
   });
 
@@ -33,7 +33,7 @@ describe("Staking", function () {
     });
   });
 
-  describe("Staking", function () {
+  describe("NFTStaking", function () {
     beforeEach(async function () {
       // Mint NFT to user
       await nft.setMinter(owner.address, true);

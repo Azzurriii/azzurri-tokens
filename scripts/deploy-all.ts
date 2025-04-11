@@ -20,10 +20,10 @@ async function main() {
       { stdio: "inherit" }
     );
 
-    // Deploy Staking contract
-    console.log("\n=== Deploying Staking Contract ===");
+    // Deploy NFTStaking contract
+    console.log("\n=== Deploying NFTStaking Contract ===");
     execSync(
-      "npx hardhat run scripts/deploy/02-deploy-staking.ts --network bscTestnet",
+      "npx hardhat run scripts/deploy/02-deploy-nft-staking.ts --network bscTestnet",
       { stdio: "inherit" }
     );
 
@@ -38,6 +38,13 @@ async function main() {
     console.log("\n=== Deploying INO Contract ===");
     execSync(
       "npx hardhat run scripts/deploy/04-deploy-ino.ts --network bscTestnet",
+      { stdio: "inherit" }
+    );
+
+    // Deploy TokenStaking contract
+    console.log("\n=== Deploying TokenStaking Contract ===");
+    execSync(
+      "npx hardhat run scripts/deploy/05-deploy-token-staking.ts --network bscTestnet",
       { stdio: "inherit" }
     );
 

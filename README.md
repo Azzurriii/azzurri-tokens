@@ -22,9 +22,9 @@ Azzurri is an ERC20 token with built-in transaction fees and a complete ecosyste
 - **Minting**: Controlled minting through authorized minters
 - **Burning**: Token owners can burn their tokens
 
-### Staking
+### NFTStaking
 
-- **NFT Staking**: Stake your NFTs to participate in the ecosystem
+- **NFT NFTStaking**: Stake your NFTs to participate in the ecosystem
 - **User Tracking**: Records of all stakers and their contributions
 - **Flexible Withdrawal**: Unstake your NFTs at any time
 
@@ -94,7 +94,7 @@ npx hardhat run scripts/deploy.js --network sepolia
 - `_maxLevel`: Maximum rarity level (e.g., 10)
 - `_baseUri`: Base URI for token metadata
 
-### Staking
+### NFTStaking
 
 - `_nft`: Address of the NFT contract
 

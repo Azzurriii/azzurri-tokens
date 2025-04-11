@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 async function main() {
-  console.log("Deploying Staking contract...");
+  console.log("Deploying NFTStaking contract...");
 
   const [deployer] = await ethers.getSigners();
   console.log("Deploying contracts with the account:", deployer.address);
@@ -31,14 +31,14 @@ async function main() {
     process.exit(1);
   }
 
-  // Deploy Staking contract
-  const Staking = await ethers.getContractFactory("Staking");
-  const staking = await Staking.deploy(nftAddress);
+  // Deploy NFTStaking contract
+  const NFTStaking = await ethers.getContractFactory("NFTStaking");
+  const staking = await NFTStaking.deploy(nftAddress);
 
   await staking.waitForDeployment();
   const stakingAddress = await staking.getAddress();
 
-  console.log("Staking contract deployed to:", stakingAddress);
+  console.log("NFTStaking contract deployed to:", stakingAddress);
 
   // Save deployment addresses
   const deploymentData = {
