@@ -1,5 +1,7 @@
 import { ethers } from "hardhat";
 import { parseEther } from "ethers";
+import fs from "fs";
+import path from "path";
 
 async function main() {
   console.log("Deploying Azzurri token...");
@@ -35,6 +37,21 @@ async function main() {
   const tokenAddress = await token.getAddress();
 
   console.log("Azzurri token deployed to:", tokenAddress);
+
+  // Save the token address to the deployments file
+  const deploymentPath = path.join(
+    __dirname,
+    "..",
+    "deployments-bsc-testnet.json"
+  );
+
+  let deployData: Record<string, string> = {};
+  if (fs.existsSync(deploymentPath)) {
+    deployData = JSON.parse(fs.readFileSync(deploymentPath, "utf8"));
+  }
+
+  deployData.tokenAddress = tokenAddress;
+  fs.writeFileSync(deploymentPath, JSON.stringify(deployData, null, 2));
 
   console.log("\nTo verify on BSCScan:");
   console.log(

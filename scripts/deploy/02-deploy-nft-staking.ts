@@ -9,13 +9,15 @@ async function main() {
   console.log("Deploying contracts with the account:", deployer.address);
 
   let nftAddress = "";
+  let deployments: Record<string, string> = {};
+  const deploymentPath = path.join(
+    __dirname,
+    "../deployments-bsc-testnet.json"
+  );
+
   try {
-    const deploymentPath = path.join(
-      __dirname,
-      "../deployments-bsc-testnet.json"
-    );
     if (fs.existsSync(deploymentPath)) {
-      const deployments = JSON.parse(fs.readFileSync(deploymentPath, "utf8"));
+      deployments = JSON.parse(fs.readFileSync(deploymentPath, "utf8"));
       nftAddress = deployments.nftAddress;
     }
   } catch (error) {
@@ -33,24 +35,20 @@ async function main() {
   const staking = await NFTStaking.deploy(nftAddress);
 
   await staking.waitForDeployment();
-  const stakingAddress = await staking.getAddress();
+  const nftStakingAddress = await staking.getAddress();
 
-  const deploymentData = {
-    nftAddress,
-    stakingAddress,
-  };
+  // Update the deployments with the staking address
+  deployments.nftStakingAddress = nftStakingAddress;
 
-  fs.writeFileSync(
-    path.join(__dirname, "../deployments-bsc-testnet.json"),
-    JSON.stringify(deploymentData, null, 2)
-  );
+  fs.writeFileSync(deploymentPath, JSON.stringify(deployments, null, 2));
 
+  console.log("NFT Staking contract deployed to:", nftStakingAddress);
   console.log("\nTo verify on BSCScan:");
   console.log(
-    `npx hardhat verify --network bscTestnet ${stakingAddress} ${nftAddress}`
+    `npx hardhat verify --network bscTestnet ${nftStakingAddress} ${nftAddress}`
   );
 
-  return { stakingAddress };
+  return { nftStakingAddress };
 }
 
 main()

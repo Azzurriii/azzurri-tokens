@@ -10,7 +10,7 @@ async function main() {
 
   // Get Azzurri token address from deployments file
   const deployments = require("../deployments-bsc-testnet.json");
-  const tokenAddress = deployments.AzzurriToken;
+  const tokenAddress = deployments.tokenAddress;
 
   // IDO parameters
   const startTime = Math.floor(Date.now() / 1000) + 3600; // Start in 1 hour

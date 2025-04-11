@@ -24,7 +24,7 @@ async function main() {
     );
   }
 
-  const nftAddress = deployments.NFT;
+  const nftAddress = deployments.nftAddress;
   if (!nftAddress) {
     throw new Error("NFT contract address not found in deployments file.");
   }
