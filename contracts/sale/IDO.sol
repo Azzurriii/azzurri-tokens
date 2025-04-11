@@ -143,7 +143,7 @@ contract IDO is Ownable {
 
     function buy(uint256 amount) external verifyAmount(amount) {
         require(
-            block.timestamp > startTime && block.timestamp < endTime,
+            block.timestamp >= startTime && block.timestamp <= endTime,
             "IDO: TIME_WRONG"
         );
         IERC20(tokenPayment).safeTransferFrom(msg.sender, treasury, amount);

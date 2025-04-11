@@ -14,7 +14,11 @@
   "description": "",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@types/form-data": "^2.2.1",
+    "@types/node": "^22.14.0",
+    "axios": "^1.8.4",
     "dotenv": "^16.5.0",
+    "form-data": "^4.0.2",
     "hardhat": "^2.23.0"
   },
   "dependencies": {

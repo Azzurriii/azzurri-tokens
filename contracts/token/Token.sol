@@ -5,8 +5,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 interface IDEXRouter {
-    function factory() external pure returns (address);
-    function WETH() external pure returns (address);
+    function factory() external view returns (address);
+    function WETH() external view returns (address);
 }
 
 interface IDEXFactory {
@@ -16,7 +16,7 @@ interface IDEXFactory {
     ) external returns (address pair);
 }
 
-contract Azzurri is ERC20, Ownable {
+contract Token is ERC20, Ownable {
     uint256 public buyFee;
     uint256 public sellFee;
     uint256 public feeEndTime;
@@ -48,12 +48,24 @@ contract Azzurri is ERC20, Ownable {
         sellFee = _sellFee;
         maxSupply = _maxSupply;
         feeEndTime = _feeEndTime;
-        IDEXRouter router = IDEXRouter(_router);
-        address _pair = IDEXFactory(router.factory()).createPair(
-            router.WETH(),
-            address(this)
-        );
-        pair[_pair] = true;
+
+        try IDEXRouter(_router).factory() returns (address factoryAddress) {
+            if (factoryAddress != address(0)) {
+                try
+                    IDEXFactory(factoryAddress).createPair(
+                        IDEXRouter(_router).WETH(),
+                        address(this)
+                    )
+                returns (address _pair) {
+                    pair[_pair] = true;
+                } catch {
+                    revert("Failed to create pair");
+                }
+            }
+        } catch {
+            revert("Failed to create pair");
+        }
+
         _mint(msg.sender, initialSupply);
     }
 
@@ -84,31 +96,65 @@ contract Azzurri is ERC20, Ownable {
         _mint(to, amount);
     }
 
-    function _transfer(
-        address sender,
-        address recipient,
+    function transfer(
+        address to,
         uint256 amount
-    ) internal override {
+    ) public virtual override returns (bool) {
+        address sender = _msgSender();
         uint256 feeAmount = 0;
 
         if (
             !_isExcludedFromFee[sender] &&
-            !_isExcludedFromFee[recipient] &&
+            !_isExcludedFromFee[to] &&
             block.timestamp <= feeEndTime
         ) {
             if (pair[sender]) {
                 feeAmount = (amount * buyFee) / FEE_DENOMINATOR;
-            } else if (pair[recipient]) {
+            } else if (pair[to]) {
                 feeAmount = (amount * sellFee) / FEE_DENOMINATOR;
             }
         }
 
         if (feeAmount > 0) {
-            super._transfer(sender, address(this), feeAmount);
-            amount -= feeAmount;
+            _transfer(sender, address(this), feeAmount);
+            _transfer(sender, to, amount - feeAmount);
+        } else {
+            _transfer(sender, to, amount);
         }
 
-        super._transfer(sender, recipient, amount);
+        return true;
+    }
+
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) public virtual override returns (bool) {
+        address spender = _msgSender();
+        _spendAllowance(from, spender, amount);
+
+        uint256 feeAmount = 0;
+
+        if (
+            !_isExcludedFromFee[from] &&
+            !_isExcludedFromFee[to] &&
+            block.timestamp <= feeEndTime
+        ) {
+            if (pair[from]) {
+                feeAmount = (amount * buyFee) / FEE_DENOMINATOR;
+            } else if (pair[to]) {
+                feeAmount = (amount * sellFee) / FEE_DENOMINATOR;
+            }
+        }
+
+        if (feeAmount > 0) {
+            _transfer(from, address(this), feeAmount);
+            _transfer(from, to, amount - feeAmount);
+        } else {
+            _transfer(from, to, amount);
+        }
+
+        return true;
     }
 
     function excludeFromFee(address account, bool excluded) external onlyOwner {
@@ -118,6 +164,6 @@ contract Azzurri is ERC20, Ownable {
     function withdrawFees() external onlyOwner {
         uint256 balance = balanceOf(address(this));
         require(balance > 0, "No fees to withdraw");
-        super._transfer(address(this), owner(), balance);
+        _transfer(address(this), owner(), balance);
     }
 }

@@ -3,7 +3,6 @@ pragma solidity ^0.8.28;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 contract NFT is ERC721, Ownable {
@@ -11,7 +10,6 @@ contract NFT is ERC721, Ownable {
     uint256 public maxLevel;
     mapping(uint256 => uint256) public level;
     mapping(address => bool) public minter;
-    mapping(uint256 => string) private _tokenURIs;
     uint256 public currentIndex = 1;
 
     modifier onlyMinter() {
@@ -72,11 +70,10 @@ contract NFT is ERC721, Ownable {
         uint256 tokenId
     ) public view virtual override returns (string memory) {
         ownerOf(tokenId);
-
-        string memory base = _baseURI();
         uint256 _level = level[tokenId];
-
         return
-            string(abi.encodePacked(base, Strings.toString(_level), ".json"));
+            string(
+                abi.encodePacked(_baseURI(), Strings.toString(_level), ".json")
+            );
     }
 }
