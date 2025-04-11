@@ -1,12 +1,5 @@
 {
   "nftAddress": "0x15cd00f319338B5B5B3040145076d59EF9682205",
-  "metadataURIs": {
-    "1": "ipfs://QmczsfjrLS4EdhyaEs5QSgACf4Hy3DutNj9fpJzHQuZnrX",
-    "2": "ipfs://QmUFxMgYWJtAvAbi44KYs6bQRc1TnkVpr5YRVWZjLbGWFR",
-    "3": "ipfs://QmVTd6CpAkVgeyfegm3gJZbTMFeKJ7jtC9c1EzWMZh5r4n",
-    "4": "ipfs://QmZEkvGf3jT9dvoGRbjf5Eudi5s76RD8hjnrNnvB6po9Do",
-    "5": "ipfs://QmST499WCbdW7Wt8DgpDTo9GQyyMBfhXWkcQ8AdYFAgmyk"
-  },
   "tokenAddress": "0xeCcb487Cd1Bc586955b56dC08B9a57C489e813d2",
   "nftStakingAddress": "0x3f70b6f6B34a2e6a12053C62754902FB01cC8FbB",
   "IDO": "0x218E137268cBfe49af18215a97815Be9be3ac3Bd",
