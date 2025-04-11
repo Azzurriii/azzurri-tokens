@@ -11,14 +11,23 @@ describe("NFT", function () {
   const NAME = "Azzurri's Banana Cat";
   const SYMBOL = "ABC";
   const MAX_LEVEL = 5;
-  const BASE_URI = "ipfs://QmczsfjrLS4EdhyaEs5QSgACf4Hy3DutNj9fpJzHQuZnrX/";
+  const LEVEL_URIS = [
+    "ipfs://QmczsfjrLS4EdhyaEs5QSgACf4Hy3DutNj9fpJzHQuZnrX",
+    "ipfs://QmUFxMgYWJtAvAbi44KYs6bQRc1TnkVpr5YRVWZjLbGWFR",
+    "ipfs://QmVTd6CpAkVgeyfegm3gJZbTMFeKJ7jtC9c1EzWMZh5r4n",
+    "ipfs://QmZEkvGf3jT9dvoGRbjf5Eudi5s76RD8hjnrNnvB6po9Do",
+    "ipfs://QmST499WCbdW7Wt8DgpDTo9GQyyMBfhXWkcQ8AdYFAgmyk",
+  ];
 
   beforeEach(async function () {
     [owner, minter, user] = await ethers.getSigners();
 
     const NFT = await ethers.getContractFactory("NFT");
-    nft = await NFT.deploy(NAME, SYMBOL, MAX_LEVEL, BASE_URI);
+    nft = await NFT.deploy(NAME, SYMBOL, MAX_LEVEL);
     await nft.waitForDeployment();
+
+    // Set level URIs
+    await nft.setAllLevelURIs(LEVEL_URIS);
   });
 
   describe("Deployment", function () {
@@ -34,10 +43,10 @@ describe("NFT", function () {
       expect(await nft.maxLevel()).to.equal(MAX_LEVEL);
     });
 
-    it("Should set the right base URI", async function () {
+    it("Should set the level URIs correctly", async function () {
       await nft.setMinter(owner.address, true);
       await nft.mint(user.address, 1);
-      expect(await nft.tokenURI(1)).to.equal(`${BASE_URI}1.json`);
+      expect(await nft.tokenURI(1)).to.equal(LEVEL_URIS[0]);
     });
   });
 
@@ -74,7 +83,7 @@ describe("NFT", function () {
     });
 
     it("Should return correct token URI", async function () {
-      expect(await nft.tokenURI(1)).to.equal(`${BASE_URI}1.json`);
+      expect(await nft.tokenURI(1)).to.equal(LEVEL_URIS[0]);
     });
 
     it("Should revert for non-existent token", async function () {

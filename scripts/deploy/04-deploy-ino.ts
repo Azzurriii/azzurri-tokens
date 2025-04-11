@@ -55,6 +55,13 @@ async function main() {
   await ino.setLevel(level);
   console.log("NFT levels set successfully");
 
+  // Set INO as a minter
+  console.log("Setting INO as a minter...");
+  const NFT = await ethers.getContractFactory("NFT");
+  const nft = NFT.attach(nftAddress) as any;
+  await nft.setMinter(inoAddress, true);
+  console.log("INO set as a minter successfully");
+
   // Save deployment address
   deployments.INO = inoAddress;
   fs.writeFileSync(deploymentPath, JSON.stringify(deployments, null, 2));

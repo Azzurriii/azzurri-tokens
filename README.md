@@ -6,12 +6,12 @@ Azzurri is an ERC20 token with built-in transaction fees and a complete ecosyste
 
 ## See on BSCScan
 
-- [Azzurri Token](https://testnet.bscscan.com/token/0x2b667F0d44ec393CD1Aca8bB4932980dF53287DD)
-- [NFT](https://testnet.bscscan.com/address/0x4aA58340EDac209055a82514b6B76A983ff574Ca)
-- [IDO](https://testnet.bscscan.com/address/0x54bDb9bFB5EFf349Ed2F35342bD6802FAf0f52ea)
-- [INO](https://testnet.bscscan.com/address/0x2093b1Dd6441D6F93C9462BE24B541432cEdA0fA)
-- [NFT Staking](https://testnet.bscscan.com/address/0x04e8F9E064D6C6de5196e5f291C7bc9201ABE328)
-- [Token Staking](https://testnet.bscscan.com/address/0xC19fD50135D4d820babF2447241D294CFCA9d466)
+- [Azzurri Token](https://testnet.bscscan.com/token/0xeCcb487Cd1Bc586955b56dC08B9a57C489e813d2)
+- [NFT](https://testnet.bscscan.com/address/0x15cd00f319338B5B5B3040145076d59EF9682205)
+- [IDO](https://testnet.bscscan.com/address/0x218E137268cBfe49af18215a97815Be9be3ac3Bd)
+- [INO](https://testnet.bscscan.com/address/0xB0d2F41AE122575727874487E6b32791B5BaD9dd)
+- [NFT Staking](https://testnet.bscscan.com/address/0x3f70b6f6B34a2e6a12053C62754902FB01cC8FbB)
+- [Token Staking](https://testnet.bscscan.com/address/0x2940294F92b31631Bae4d41279E467a04bc9c566)
 
 ## Features
 

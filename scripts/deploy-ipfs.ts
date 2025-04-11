@@ -77,6 +77,7 @@ async function main() {
   // 2. Update and upload metadata
   console.log("\nUploading metadata...");
   const metadataCIDs: Record<number, string> = {};
+  const tokenIdToMetadataURL: Record<string, string> = {};
 
   for (let level = 1; level <= 5; level++) {
     const metadataPath = path.join(metadataDir, `${level}.json`);
@@ -95,20 +96,21 @@ async function main() {
       `Azzurri-NFT-Level-${level}-Metadata`
     );
     metadataCIDs[level] = cid;
-    console.log(`Level ${level} metadata uploaded: ipfs://${cid}`);
+
+    // Store the full URI for this level
+    tokenIdToMetadataURL[level] = `ipfs://${cid}`;
+
+    console.log(
+      `Level ${level} metadata uploaded: ${tokenIdToMetadataURL[level]}`
+    );
 
     // Clean up
     fs.unlinkSync(updatedMetadataPath);
   }
 
-  // 3. Generate base URI
-  const baseURI = `ipfs://${metadataCIDs[1]}`.replace("/1.json", "/");
-  console.log("\nDeployment complete!");
-  console.log("Base URI for NFT contract:", baseURI);
-
   // Save deployment info
   const deploymentInfo = {
-    baseURI,
+    metadataURIs: tokenIdToMetadataURL,
     imageCIDs,
     metadataCIDs,
   };
@@ -117,6 +119,9 @@ async function main() {
     path.join(__dirname, "../deployments-ipfs.json"),
     JSON.stringify(deploymentInfo, null, 2)
   );
+
+  console.log("\nDeployment complete!");
+  console.log("Metadata URLs saved to deployments-ipfs.json");
 }
 
 main().catch((error) => {

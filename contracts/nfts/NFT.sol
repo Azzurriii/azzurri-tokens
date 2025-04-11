@@ -6,10 +6,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 contract NFT is ERC721, Ownable {
-    string baseURI;
     uint256 public maxLevel;
     mapping(uint256 => uint256) public level;
     mapping(address => bool) public minter;
+    mapping(uint256 => string) private levelURIs;
     uint256 public currentIndex = 1;
 
     modifier onlyMinter() {
@@ -20,22 +20,27 @@ contract NFT is ERC721, Ownable {
     constructor(
         string memory name,
         string memory symbol,
-        uint256 _maxLevel,
-        string memory _baseUri
+        uint256 _maxLevel
     ) ERC721(name, symbol) Ownable(_msgSender()) {
         maxLevel = _maxLevel;
-        baseURI = _baseUri;
     }
 
     event SetMinter(address minter, bool status, uint256 blockTime);
     event SetMaxLevel(uint256 maxLevel);
+    event SetLevelURI(uint256 level, string uri);
 
-    function _baseURI() internal view virtual override returns (string memory) {
-        return baseURI;
+    function setLevelURI(uint256 _level, string memory _uri) public onlyOwner {
+        require(_level > 0 && _level <= maxLevel, "level wrong");
+        levelURIs[_level] = _uri;
+        emit SetLevelURI(_level, _uri);
     }
 
-    function setBaseURI(string memory _baseUri) public onlyOwner {
-        baseURI = _baseUri;
+    function setAllLevelURIs(string[] memory _uris) public onlyOwner {
+        require(_uris.length == maxLevel, "Invalid array length");
+        for (uint256 i = 1; i <= maxLevel; i++) {
+            levelURIs[i] = _uris[i - 1];
+            emit SetLevelURI(i, _uris[i - 1]);
+        }
     }
 
     function setMaxLevel(uint256 _maxLevel) external onlyOwner {
@@ -71,9 +76,13 @@ contract NFT is ERC721, Ownable {
     ) public view virtual override returns (string memory) {
         ownerOf(tokenId);
         uint256 _level = level[tokenId];
-        return
-            string(
-                abi.encodePacked(_baseURI(), Strings.toString(_level), ".json")
-            );
+
+        string memory levelSpecificURI = levelURIs[_level];
+        require(
+            bytes(levelSpecificURI).length > 0,
+            "URI not set for this level"
+        );
+
+        return levelSpecificURI;
     }
 }

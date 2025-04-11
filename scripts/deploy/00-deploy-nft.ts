@@ -12,18 +12,44 @@ async function main() {
   const name = "Azzurri NFT";
   const symbol = "ANFT";
   const maxLevel = 5;
-  const baseUri = "ipfs://QmczsfjrLS4EdhyaEs5QSgACf4Hy3DutNj9fpJzHQuZnrX/";
 
+  // Load metadata URIs from IPFS deployment
+  const ipfsDeploymentPath = path.join(
+    __dirname,
+    "../../deployments-ipfs.json"
+  );
+  const ipfsDeployment = JSON.parse(
+    fs.readFileSync(ipfsDeploymentPath, "utf8")
+  );
+  const metadataURIs = ipfsDeployment.metadataURIs || {};
+
+  // Deploy NFT contract
   const NFT = await ethers.getContractFactory("NFT");
-  const nft = await NFT.deploy(name, symbol, maxLevel, baseUri);
-
+  const nft = await NFT.deploy(name, symbol, maxLevel);
   await nft.waitForDeployment();
   const nftAddress = await nft.getAddress();
 
   console.log("NFT contract deployed to:", nftAddress);
 
+  // Prepare URIs array for all levels
+  const uris = [];
+  for (let level = 1; level <= maxLevel; level++) {
+    if (!metadataURIs[level]) {
+      throw new Error(`No metadata URI found for level ${level}`);
+    }
+    uris.push(metadataURIs[level]);
+    console.log(`Level ${level} URI: ${metadataURIs[level]}`);
+  }
+
+  // Set all level URIs at once
+  console.log("Setting all level URIs...");
+  const tx = await nft.setAllLevelURIs(uris);
+  await tx.wait();
+  console.log("All level URIs set successfully");
+
   const deploymentData = {
     nftAddress,
+    metadataURIs,
   };
 
   fs.writeFileSync(
@@ -33,7 +59,7 @@ async function main() {
 
   console.log("\nTo verify on BSCScan:");
   console.log(
-    `npx hardhat verify --network bscTestnet ${nftAddress} "${name}" "${symbol}" ${maxLevel} "${baseUri}"`
+    `npx hardhat verify --network bscTestnet ${nftAddress} "${name}" "${symbol}" ${maxLevel}`
   );
 
   return { nftAddress };

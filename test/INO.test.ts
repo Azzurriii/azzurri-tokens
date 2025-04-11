@@ -16,12 +16,7 @@ describe("INO", function () {
 
     // Deploy NFT
     const NFT = await ethers.getContractFactory("NFT");
-    nft = await NFT.deploy(
-      "Azzurri's Banana Cat",
-      "ABC",
-      5,
-      "ipfs://QmczsfjrLS4EdhyaEs5QSgACf4Hy3DutNj9fpJzHQuZnrX/"
-    );
+    nft = await NFT.deploy("Azzurri's Banana Cat", "ABC", 5);
     await nft.waitForDeployment();
 
     // Deploy INO
