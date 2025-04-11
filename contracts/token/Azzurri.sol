@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.28;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -91,13 +91,15 @@ contract Azzurri is ERC20, Ownable {
     ) internal override {
         uint256 feeAmount = 0;
 
-        if (!_isExcludedFromFee[sender] && !_isExcludedFromFee[recipient]) {
-            if (block.timestamp <= feeEndTime) {
-                if (pair[sender]) {
-                    feeAmount = (amount * buyFee) / FEE_DENOMINATOR;
-                } else if (pair[recipient]) {
-                    feeAmount = (amount * sellFee) / FEE_DENOMINATOR;
-                }
+        if (
+            !_isExcludedFromFee[sender] &&
+            !_isExcludedFromFee[recipient] &&
+            block.timestamp <= feeEndTime
+        ) {
+            if (pair[sender]) {
+                feeAmount = (amount * buyFee) / FEE_DENOMINATOR;
+            } else if (pair[recipient]) {
+                feeAmount = (amount * sellFee) / FEE_DENOMINATOR;
             }
         }
 
