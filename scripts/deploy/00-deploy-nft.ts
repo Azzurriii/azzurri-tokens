@@ -14,7 +14,6 @@ async function main() {
   const maxLevel = 5;
   const baseUri = "ipfs://QmczsfjrLS4EdhyaEs5QSgACf4Hy3DutNj9fpJzHQuZnrX/";
 
-  // Deploy NFT contract
   const NFT = await ethers.getContractFactory("NFT");
   const nft = await NFT.deploy(name, symbol, maxLevel, baseUri);
 
@@ -23,7 +22,6 @@ async function main() {
 
   console.log("NFT contract deployed to:", nftAddress);
 
-  // Save deployment addresses
   const deploymentData = {
     nftAddress,
   };
@@ -33,7 +31,6 @@ async function main() {
     JSON.stringify(deploymentData, null, 2)
   );
 
-  // Verify command reminder
   console.log("\nTo verify on BSCScan:");
   console.log(
     `npx hardhat verify --network bscTestnet ${nftAddress} "${name}" "${symbol}" ${maxLevel} "${baseUri}"`

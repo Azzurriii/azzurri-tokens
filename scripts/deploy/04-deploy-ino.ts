@@ -30,8 +30,8 @@ async function main() {
   }
 
   // INO parameters
-  const treasury = deployer.address; // Treasury address
-  const priceBNB = ethers.parseEther("0.1"); // Price per NFT in BNB
+  const treasury = deployer.address;
+  const priceBNB = ethers.parseEther("0.001"); // Price per NFT in BNB
 
   // Deploy INO contract
   const INO = await ethers.getContractFactory("INO");

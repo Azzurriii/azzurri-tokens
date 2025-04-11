@@ -36,7 +36,6 @@ async function main() {
 
   console.log("Azzurri token deployed to:", tokenAddress);
 
-  // Verify command reminder
   console.log("\nTo verify on BSCScan:");
   console.log(
     `npx hardhat verify --network bscTestnet ${tokenAddress} "${name}" "${symbol}" ${buyFee} ${sellFee} ${maxSupply} ${initialSupply} ${feeEndTime} ${ROUTER_ADDRESS}`

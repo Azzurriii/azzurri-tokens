@@ -8,7 +8,6 @@ async function main() {
   const [deployer] = await ethers.getSigners();
   console.log("Deploying contracts with the account:", deployer.address);
 
-  // Try to read the NFT address from deployment output file
   let nftAddress = "";
   try {
     const deploymentPath = path.join(
@@ -23,7 +22,6 @@ async function main() {
     console.log("No existing deployment file found or error reading it");
   }
 
-  // If NFT address is not found in the file, prompt to provide it
   if (!nftAddress) {
     console.log(
       "Please provide the NFT contract address in the .env file or as an argument"
@@ -31,16 +29,12 @@ async function main() {
     process.exit(1);
   }
 
-  // Deploy NFTStaking contract
   const NFTStaking = await ethers.getContractFactory("NFTStaking");
   const staking = await NFTStaking.deploy(nftAddress);
 
   await staking.waitForDeployment();
   const stakingAddress = await staking.getAddress();
 
-  console.log("NFTStaking contract deployed to:", stakingAddress);
-
-  // Save deployment addresses
   const deploymentData = {
     nftAddress,
     stakingAddress,
@@ -51,7 +45,6 @@ async function main() {
     JSON.stringify(deploymentData, null, 2)
   );
 
-  // Verify command reminder
   console.log("\nTo verify on BSCScan:");
   console.log(
     `npx hardhat verify --network bscTestnet ${stakingAddress} ${nftAddress}`

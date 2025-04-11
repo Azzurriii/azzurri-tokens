@@ -47,7 +47,6 @@ async function main() {
 
   console.log("IDO contract deployed to:", idoAddress);
 
-  // Save deployment address
   const deploymentPath = path.join(
     __dirname,
     "..",
@@ -62,7 +61,6 @@ async function main() {
   deployData.IDO = idoAddress;
   fs.writeFileSync(deploymentPath, JSON.stringify(deployData, null, 2));
 
-  // Verify command reminder
   console.log("\nTo verify on BSCScan:");
   console.log(
     `npx hardhat verify --network bscTestnet ${idoAddress} ${startTime} ${endTime} "${tokenAddress}" ${tokenPrice} ${startRelease} ${cliff} ${vesting} ${tge} ${purchaseLimit} ${cap} "${tokenPayment}" "${treasury}"`
